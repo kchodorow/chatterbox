@@ -1,8 +1,16 @@
 <?xml version="1.0"?>
+
 <overlay id="sample" 
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
  <statusbar id="status-bar">
-  <statusbarpanel id="my-panel" label="Hello, World"  />
+  <statusbarpanel id="my-panel">
+   <script type="application/x-javascript" src="chrome://chatterbox/content/jquery-1.3.2.js"/>
+   <script type="application/x-javascript" src="chrome://chatterbox/content/vote.js"/>
+   <label value="+" onclick="vote(true);"/>
+   <label value="/"/>
+   <label value="-" onclick="vote(false);"/>
+   <label value="comments"/>
+  </statusbarpanel>
  </statusbar>
 </overlay>
 
