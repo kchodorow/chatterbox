@@ -13,9 +13,12 @@
    <label value="-" onclick="vote(false);"/>
 
    <popupset>
-    <menupopup id="commentpop" position="before_end">
-     <label id="commentstatus" value="loading..."/>
-    </menupopup>
+    <panel id="commentpop" position="before_end">
+     <label id="comment-status" value="loading..."/>
+
+     <textbox id="comment-content" multiline="true"></textbox>
+     <button label="post" onclick="postComment()"/>
+    </panel>
    </popupset>
 
    <label popup="commentpop" value="comments" onclick="loadComments()"/>

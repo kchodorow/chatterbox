@@ -21,10 +21,21 @@ function loadComments() {
     $.get(serverURL,
 	  {"comments" : getHref()},
 	  function(data) {
-	      alert("hi");
-	  });
+	      document.getElementById("comment-status").value = data;
+	  }
+	  //, "json" //when we're getting a response
+	  );
 }
 
 function postComment() {
-    return;
+    var comment = escape(document.getElementById("comment-content").value);
+    $.post(serverURL,
+	   {"comment" : comment,
+	    "page" : getHref()},
+	   function(data) {
+	       loadComments();
+	       document.getElementById("comment-content").value="";
+	   }
+	   //, "json" // when we're getting a response
+	   );
 }
