@@ -4,12 +4,22 @@
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
  <statusbar id="status-bar">
   <statusbarpanel id="my-panel">
-   <script type="application/x-javascript" src="chrome://chatterbox/content/jquery-1.3.2.js"/>
-   <script type="application/x-javascript" src="chrome://chatterbox/content/vote.js"/>
+
+   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"/>
+   <script type="text/javascript" src="chrome://chatterbox/content/vote.js"/>
+
    <label value="+" onclick="vote(true);"/>
-   <label value="/"/>
+   <label value="o"/>
    <label value="-" onclick="vote(false);"/>
-   <label value="comments"/>
+
+   <popupset>
+    <menupopup id="commentpop" position="before_end">
+     <label id="commentstatus" value="loading..."/>
+    </menupopup>
+   </popupset>
+
+   <label popup="commentpop" value="comments" onclick="loadComments()"/>
+
   </statusbarpanel>
  </statusbar>
 </overlay>
