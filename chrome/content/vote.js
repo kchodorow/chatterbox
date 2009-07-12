@@ -12,18 +12,35 @@ function vote(pm) {
 	       "page" : getHref()
 	   },
            function(data){
-               alert(data.msg);
+	       // replace image
+	       return;
            },
            "json");
 }
 
 function loadComments() {
     $.get(serverURL,
-	  {"comments" : getHref()},
+	  {"page" : getHref(),
+           "comments" : 1},
 	  function(data) {
-	      document.getElementById("comment-status").value = data;
-	  }
-	  //, "json" //when we're getting a response
+	      if (data.total == 0) {
+		  document.getElementById("comment-status").value = "No comments, yet.";
+		  return;
+	      }
+
+	      str = "";
+	      for (i=0; i<data.comments.length; i++) {
+		  str += data.comments[i].user + " says " + data.comments[i].comment+", ";
+	      }
+
+	      if (data.total > data.comments.length) {
+		  document.getElementById("comment-status").value = "More comments available.";
+	      }
+	      else {
+		  document.getElementById("comment-status").value = str;
+	      }
+	  }, 
+	  "json"
 	  );
 }
 
