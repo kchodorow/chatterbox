@@ -1,11 +1,12 @@
 var serverURL = "http://www.snailinaturtleneck.com/chatterbox/util.php";
+var loadedComments = false;
 
 function getHref() {
     return escape(window.content.document.location);
 }
 
 
-function vote(pm) {
+function votePage(pm) {
     $.post(serverURL,
            {
 	       "vote" : (pm ? 1 : 0),
@@ -18,7 +19,33 @@ function vote(pm) {
            "json");
 }
 
+function voteComment(pm, cid) {
+    $.post(serverURL,
+           {
+	       "vote" : (pm ? 1 : 0),
+	       "comment" : cid
+	   },
+           function(data){
+	       loadedComments = false;
+	       loadComments();
+           });
+}
+
+function createLabel(val) {
+    l = document.createElement("label");
+
+    var attr = document.createAttribute("value");
+    attr.nodeValue = val;
+    l.setAttributeNode(attr);
+
+    return l;
+}
+
 function loadComments() {
+    if (loadedComments) {
+	return;
+    }
+
     $.get(serverURL,
 	  {"page" : getHref(),
            "comments" : 1},
@@ -28,20 +55,76 @@ function loadComments() {
 		  return;
 	      }
 
-	      str = "";
+	      $("vbox#comments").remove();
+
+	      // create the container for a list of comments
+	      var commentsBox = document.createElement("vbox");
+
+	      var boxId = document.createAttribute("id");
+	      boxId.nodeValue = "comments";
+	      commentsBox.setAttributeNode(boxId);
+
 	      for (i=0; i<data.comments.length; i++) {
-		  str += data.comments[i].user + " says " + data.comments[i].comment+", ";
+		  /* for each comment, use:
+		   *  -------------------------
+		   * |  ^  | username          |
+		   * |  #  | ................. |
+		   * |  v  | ................. |
+		   *  -------------------------
+		   *
+		   * which is:
+		   * <hbox>
+		   *  <vbox>
+		   *   <image id="up">
+		   *   <label id="score">
+		   *   <image id="down">
+		   *  </vbox>
+		   *  <vbox>
+		   *   <label id="username"/>
+		   *   <label id="comment"/>
+		   *  </vbox>
+		   * </hbox>
+		   */
+
+		  var commentBox = document.createElement("hbox");
+		  var scoreBox = document.createElement("vbox");
+
+		  var plusLabel = createLabel("+");
+		  var plusAttr = document.createAttribute("onclick");
+		  plusAttr.nodeValue = "voteComment(true, '" + data.comments[i]._id + "')";
+		  plusLabel.setAttributeNode(plusAttr);
+
+		  var scoreLabel = createLabel(data.comments[i].score);
+
+		  var minusLabel = createLabel("-");
+		  var minusAttr = document.createAttribute("onclick");
+		  minusAttr.nodeValue = "voteComment(false, '" + data.comments[i]._id + "')";
+		  minusLabel.setAttributeNode(minusAttr);
+
+		  scoreBox.appendChild(plusLabel);
+		  scoreBox.appendChild(scoreLabel);
+		  scoreBox.appendChild(minusLabel);
+
+		  var contentBox = document.createElement("vbox");
+		  var userLabel = createLabel(data.comments[i].user + " on "+
+					      data.comments[i].date);
+		  var contentLabel = createLabel(data.comments[i].comment);
+
+		  contentBox.appendChild(userLabel);
+		  contentBox.appendChild(contentLabel);
+
+		  commentBox.appendChild(scoreBox);
+		  commentBox.appendChild(contentBox);
+		  
+		  commentsBox.appendChild(commentBox);
 	      }
 
-	      if (data.total > data.comments.length) {
-		  document.getElementById("comment-status").value = "More comments available.";
-	      }
-	      else {
-		  document.getElementById("comment-status").value = str;
-	      }
+	      $("#comment-status").before(commentsBox);
+	      document.getElementById("comment-status").value = data.total;
+
+	      loadedComments = true;
 	  }, 
-	  "json"
-	  );
+	  "json");
 }
 
 function postComment() {
@@ -50,9 +133,8 @@ function postComment() {
 	   {"comment" : comment,
 	    "page" : getHref()},
 	   function(data) {
+	       loaded = false;
 	       loadComments();
 	       document.getElementById("comment-content").value="";
-	   }
-	   //, "json" // when we're getting a response
-	   );
+	   });
 }

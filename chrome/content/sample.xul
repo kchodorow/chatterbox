@@ -8,9 +8,9 @@
    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"/>
    <script type="text/javascript" src="chrome://chatterbox/content/vote.js"/>
 
-   <label value="+" onclick="vote(true);"/>
+   <label value="+" onclick="votePage(true);"/>
    <label value="o"/>
-   <label value="-" onclick="vote(false);"/>
+   <label value="-" onclick="votePage(false);"/>
 
    <popupset>
     <panel id="commentpop" position="before_end">
