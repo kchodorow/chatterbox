@@ -46,10 +46,11 @@ function loadComments() {
 	return;
     }
 
-    $.get(serverURL,
-	  {"page" : getHref(),
-           "comments" : 1},
-	  function(data) {
+    $.ajax({ "type" : "GET", 
+             "url" : serverURL,
+             "data" : { "page" : getHref(),
+                        "comments" : 1},
+             "success" : function(data) {
 	      if (data.total == 0) {
 		  document.getElementById("comment-status").value = "No comments, yet.";
 		  return;
@@ -123,8 +124,15 @@ function loadComments() {
 	      document.getElementById("comment-status").value = data.total;
 
 	      loadedComments = true;
-	  }, 
-	  "json");
+	  },
+          "dataType" : "json",
+          "error" : function (XMLHttpRequest, textStatus, errorThrown) {
+              if (textStatus == "timeout") {
+                  document.getElementById("comment-status").value = "Timed out!";
+              } else {
+		  document.getElementById("comment-status").value = "An error occured: "+textStatus;
+              }
+          }});
 }
 
 function postComment() {

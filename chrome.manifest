@@ -1,2 +1,3 @@
 content     chatterbox    chrome/content/
 overlay chrome://browser/content/browser.xul chrome://chatterbox/content/sample.xul
+skin          chatterbox      classic/1.0 chrome/skin/

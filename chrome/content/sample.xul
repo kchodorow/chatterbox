@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<?xml-stylesheet href="chrome://chatterbox/skin/chatterbox.css" type="text/css"?> 
 
 <overlay id="sample" 
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
@@ -6,11 +7,11 @@
   <statusbarpanel id="my-panel">
 
    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"/>
-   <script type="text/javascript" src="chrome://chatterbox/content/vote.js"/>
+   <script type="text/javascript" src="chrome://chatterbox/content/chatterbox.js"/>
 
-   <label value="+" onclick="votePage(true);"/>
-   <label value="o"/>
-   <label value="-" onclick="votePage(false);"/>
+   <image id="plus" onclick="votePage(1);"/>
+   <label popup="commentpop" value="0" onclick="loadComments()"/>
+   <image id="minus" onclick="votePage(-1);"/>
 
    <popupset>
     <panel id="commentpop" position="before_end">
@@ -20,8 +21,6 @@
      <button label="post" onclick="postComment()"/>
     </panel>
    </popupset>
-
-   <label popup="commentpop" value="comments" onclick="loadComments()"/>
 
   </statusbarpanel>
  </statusbar>

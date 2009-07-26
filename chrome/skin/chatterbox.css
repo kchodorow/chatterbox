@@ -1,0 +1,6 @@
+#plus { 
+        list-style-image: url("chrome://chatterbox/skin/plus.jpg");
+}
+#minus { 
+        list-style-image: url("chrome://chatterbox/skin/minus.jpg");
+}
