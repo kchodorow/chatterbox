@@ -9,9 +9,9 @@
    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"/>
    <script type="text/javascript" src="chrome://chatterbox/content/chatterbox.js"/>
 
-   <image id="plus" onclick="votePage(1);"/>
-   <label popup="commentpop" value="0" onclick="loadComments()"/>
-   <image id="minus" onclick="votePage(-1);"/>
+   <image id="plus" onclick="votePage(true);"/>
+   <label id="page-score" popup="commentpop" value="0" onclick="loadComments()"/>
+   <image id="minus" onclick="votePage(false);"/>
 
    <popupset>
     <panel id="commentpop" position="before_end">

@@ -13,8 +13,10 @@ function votePage(pm) {
 	       "page" : getHref()
 	   },
            function(data){
-	       // replace image
-	       return;
+               if (!data || "value" in data) {
+                   return;
+               }
+               document.getElementById("page-score").value = data.score;
            },
            "json");
 }
@@ -146,3 +148,59 @@ function postComment() {
 	       document.getElementById("comment-content").value="";
 	   });
 }
+
+
+/*
+ * Page load/tab change listener
+ */
+
+var chatterbox_urlBarListener = {
+    QueryInterface: function(aIID)
+    {
+        if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
+            aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
+            aIID.equals(Components.interfaces.nsISupports))
+            return this;
+        throw Components.results.NS_NOINTERFACE;
+    },
+
+    onLocationChange: function(aProgress, aRequest, aURI)
+    {
+        myExtension.processNewURL(aURI);
+    },
+
+    onStateChange: function(a, b, c, d) {},
+    onProgressChange: function(a, b, c, d, e, f) {},
+    onStatusChange: function(a, b, c, d) {},
+    onSecurityChange: function(a, b, c) {}
+};
+
+var myExtension = {
+    oldURL: null,
+  
+    init: function() {
+        // Listen for webpage loads
+        gBrowser.addProgressListener(chatterbox_urlBarListener,
+                                     Components.interfaces.nsIWebProgress.NOTIFY_LOCATION);
+    },
+  
+    uninit: function() {
+        gBrowser.removeProgressListener(chatterbox_urlBarListener);
+    },
+
+    processNewURL: function(aURI) {
+        if (aURI.spec == this.oldURL)
+            return;
+    
+        // now we know the url is new...
+        alert(aURI.spec);
+        this.oldURL = aURI.spec;
+    }
+};
+
+window.addEventListener("load", function() {myExtension.init()}, false);
+window.addEventListener("unload", function() {myExtension.uninit()}, false);
+
+/*
+ * EO Page load/tab change listener
+ */
